@@ -30,8 +30,9 @@ class _TodoListState extends State<TodoList> {
           child: Column(children: [
             TextField(
               controller: _controlNewTodo,
-              decoration:
-                  const InputDecoration(label: Text("Insira uma nova tarefa.")),
+              decoration: const InputDecoration(
+                label: Text("Insira uma nova tarefa."),
+              ),
             ),
             Padding(
               padding: const EdgeInsetsDirectional.all(8),
@@ -43,7 +44,7 @@ class _TodoListState extends State<TodoList> {
                   todo.details = "";
                   setState(() {
                     _itemsList.add(todo);
-                    _controlNewTodo.text = "";
+                    _controlNewTodo.clear();
                   });
                 },
               ),
