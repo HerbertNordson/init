@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:init/controllers/todo_dao_controller.dart';
 import 'package:init/models/todo_model.dart';
 
 import 'todo_details_screen.dart';
@@ -12,8 +13,13 @@ class TodoList extends StatefulWidget {
 
 class _TodoListState extends State<TodoList> {
   final TextEditingController _controlNewTodo = TextEditingController();
+  final TodoDao todoController = TodoDao();
 
   final List<Todo> _itemsList = [];
+
+  void handleTodo(Todo todo) async {
+    await todoController.create(todo);
+  }
 
   @override
   void initState() {
@@ -39,13 +45,16 @@ class _TodoListState extends State<TodoList> {
               child: ElevatedButton(
                 child: const Text("Adicionar"),
                 onPressed: () {
-                  final Todo todo = Todo();
-                  todo.todo = _controlNewTodo.text.toString();
-                  todo.details = "";
+                  final Todo todo = Todo(
+                    todo: _controlNewTodo.text.toString(),
+                    details: "",
+                    done: false,
+                  );
                   setState(() {
                     _itemsList.add(todo);
                     _controlNewTodo.clear();
                   });
+                  handleTodo(todo);
                 },
               ),
             ),
@@ -59,12 +68,12 @@ class _TodoListState extends State<TodoList> {
               child: Row(
                 children: [
                   SizedBox(
-                    width: 230,
+                    width: 180,
                     child: ListTile(
                       title: Text(
                         _itemsList[index].todo.toString(),
                         style: TextStyle(
-                          decoration: _itemsList[index].done != null
+                          decoration: _itemsList[index].done != false
                               ? TextDecoration.lineThrough
                               : TextDecoration.none,
                         ),
