@@ -48,8 +48,8 @@ class _TODODetailsState extends State<TODODetails> {
                   onPressed: () {
                     setState(() {
                       widget.todo.details = _controlTodoDetail.text.toString();
-                      Navigator.pop(context);
                     });
+                    Navigator.pop(context);
                   },
                   child: const Text("Salvar")),
             )

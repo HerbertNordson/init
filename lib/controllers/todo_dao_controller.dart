@@ -86,10 +86,10 @@ class TodoDao {
       );
 
       return Todo(
-        id: maps[0]['id'],
-        todo: maps[0]['todo'],
-        details: maps[0]['details'],
-        done: maps[0]['done'],
+        id: maps.first['id'],
+        todo: maps.first['todo'],
+        details: maps.first['details'],
+        done: maps.first['done'],
       );
     } catch (ex) {
       print(ex);
