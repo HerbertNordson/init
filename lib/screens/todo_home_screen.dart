@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:init/controllers/todo_dao_controller.dart';
 import 'package:init/models/todo_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'todo_details_screen.dart';
 
@@ -13,18 +15,14 @@ class TodoList extends StatefulWidget {
 
 class _TodoListState extends State<TodoList> {
   final TextEditingController _controlNewTodo = TextEditingController();
-  final TodoDao todoController = TodoDao();
 
   final List<Todo> _itemsList = [];
-
-  void handleTodo(Todo todo) async {
-    await todoController.create(todo);
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _updateTodo();
   }
 
   @override
@@ -52,9 +50,9 @@ class _TodoListState extends State<TodoList> {
                   );
                   setState(() {
                     _itemsList.add(todo);
+                    _saveTodo();
                     _controlNewTodo.clear();
                   });
-                  handleTodo(todo);
                 },
               ),
             ),
@@ -84,6 +82,8 @@ class _TodoListState extends State<TodoList> {
                         onChanged: (value) {
                           setState(() {
                             _itemsList[index].done = value!;
+
+                            _saveTodo();
                           });
                         },
                       ),
@@ -93,8 +93,10 @@ class _TodoListState extends State<TodoList> {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            TODODetails(todo: _itemsList[index]),
+                        builder: (context) => TODODetails(
+                          todo: _itemsList[index],
+                          uptTodo: _saveTodo,
+                        ),
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
@@ -124,5 +126,26 @@ class _TodoListState extends State<TodoList> {
         ),
       ],
     );
+  }
+
+  void _saveTodo() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    final minhaListaTodosString =
+        jsonEncode(_itemsList.map((e) => e.toJson()).toList());
+    _prefs.setString(
+      'TODOS',
+      minhaListaTodosString,
+    );
+  }
+
+  void _updateTodo() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    String? list = _prefs.getString('TODOS');
+    List<dynamic> jsonList = jsonDecode(list!);
+    var todos = jsonList.map((e) => Todo.fromJson(e)).toList();
+
+    setState(() {
+      _itemsList.addAll(todos);
+    });
   }
 }

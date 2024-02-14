@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:init/controllers/todo_dao_controller.dart';
 import 'package:init/models/todo_model.dart';
 
 class TODODetails extends StatefulWidget {
   final Todo todo;
-  const TODODetails({required this.todo, super.key});
+  final uptTodo;
+  const TODODetails({required this.todo, required this.uptTodo, super.key});
 
   @override
   State<TODODetails> createState() => _TODODetailsState();
@@ -12,11 +12,6 @@ class TODODetails extends StatefulWidget {
 
 class _TODODetailsState extends State<TODODetails> {
   final TextEditingController _controlTodoDetail = TextEditingController();
-  final TodoDao todoController = TodoDao();
-
-  void handleDetails() async {
-    await todoController.update(widget.todo);
-  }
 
   @override
   void initState() {
@@ -54,8 +49,8 @@ class _TODODetailsState extends State<TODODetails> {
                   onPressed: () {
                     setState(() {
                       widget.todo.details = _controlTodoDetail.text.toString();
+                      widget.uptTodo;
                     });
-                    handleDetails();
                     Navigator.pop(context);
                   },
                   child: const Text("Salvar")),

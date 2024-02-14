@@ -1,12 +1,22 @@
 class Todo {
-  String? id = "";
-  String? todo = "";
-  String? details = "";
-  bool? done = false;
+  late String todo;
+  late String details;
+  late bool done;
 
-  Todo({this.id, this.todo, this.details, this.done});
+  Todo({required this.todo, required this.details, required this.done});
 
-  Map<String, dynamic> toMap() {
-    return {'id': id, 'todo': todo, 'details': details, 'done': done};
+  Todo.fromJson(Map<String, dynamic> json) {
+    todo = json['todo'];
+    details = json['details'];
+    done = json['done'];
   }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['todo'] = todo;
+    data['details'] = details;
+    data['done'] = done;
+    return data;
+  }
+  
 }
